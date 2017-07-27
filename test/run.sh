@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MATRICES="simple"
+MATRICES="simple simple_shuffled simple_emptyrow"
 
 for matrix in $MATRICES
 do
