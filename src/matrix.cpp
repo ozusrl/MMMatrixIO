@@ -141,7 +141,7 @@ CSCMatrix* MMMatrix::toCSC() {
     eltIndex++;
   }
   while (colIndex < M) {
-    rows[colIndex + 1] = eltIndex;
+    cols[colIndex + 1] = eltIndex;
     colIndex++;
   }
   cols[M] = eltIndex;
