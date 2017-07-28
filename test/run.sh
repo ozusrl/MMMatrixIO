@@ -1,9 +1,10 @@
 #!/bin/bash
 
-MATRICES="simple simple_shuffled simple_emptyrow"
-
-for matrix in $MATRICES
+for filename in *.mtx
 do
-    echo "=== " $matrix " ===" 
-    ../build/testmatrixio $matrix".mtx" | diff - $matrix"_expected.txt" 
+    extension="${filename##*.}"
+    basefilename="${filename%.*}"
+    
+    echo "=== " $basefilename " ===" 
+    ../build/testmatrixio $filename | diff - $basefilename"_expected.txt" 
 done
