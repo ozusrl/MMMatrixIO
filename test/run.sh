@@ -6,5 +6,6 @@ do
     basefilename="${filename%.*}"
     
     echo "=== " $basefilename " ===" 
-    ../build/testmatrixio $filename | diff - $basefilename"_expected.txt" 
+    ../build/testmatrixio $filename > $basefilename"_expected.txt"
+    git diff $basefilename"_expected.txt"
 done
