@@ -15,10 +15,12 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${dir}")
 
 set(SOURCE_FILES
                  matrix.cpp
+                 mmio.cpp
 )
 
 set(HEADER_FILES
                  matrix.h
+                 mmio.h
 )
 
 add_library(mmmatrixio ${SOURCE_FILES} ${HEADER_FILES})

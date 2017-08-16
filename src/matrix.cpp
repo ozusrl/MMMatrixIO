@@ -1,9 +1,8 @@
 #include "matrix.h"
 #include <iostream>
-#include <fstream>
-#include <sstream>
 #include <algorithm>
-#include <iomanip>
+
+#include "mmio.h"
 
 using namespace thundercat;
 using namespace std;
@@ -152,41 +151,54 @@ CSCMatrix* MMMatrix::toCSC() {
 // Caller of this method is responsible for destructing the
 // returned matrix.
 MMMatrix* MMMatrix::fromFile(string fileName) {
-  ifstream mmFile(fileName.c_str());
-  if (!mmFile.is_open()) {
+  FILE *f;
+  if ((f = fopen(fileName.c_str(), "r")) == NULL) {
     std::cerr << "Problem opening file " << fileName << ".\n";
     exit(1);
   }
-  string headerLine;
-  // consume the comments until we reach the size info
-  while (mmFile.good()) {
-    getline (mmFile, headerLine);
-    if (headerLine[0] != '%') break;
+  
+  MM_typecode matcode;
+  if (mm_read_banner(f, &matcode) != 0) {
+    std::cerr << "Could not process Matrix Market banner.\n";
+    exit(1);
+  }
+
+  if (!mm_is_matrix(matcode) || !mm_is_coordinate(matcode) || !mm_is_sparse(matcode)) {
+    std::cerr << "Only sparse matrices in coordinate format are handled.\n";
+    exit(1);
   }
   
-  // Read N, M, NZ
-  stringstream header(headerLine, ios_base::in);
-  int n, m, nz;
-  header >> n >> m >> nz;
+  if (mm_is_complex(matcode)) {
+    std::cerr << "Complex matrices are not handled.\n";
+    exit(1);
+  }
   
+  int N, M, NZ;
+  if ((mm_read_mtx_crd_size(f, &N, &M, &NZ)) != 0) {
+    std::cerr << "Could not read size information.\n";
+    exit(1);
+  }
+
   // Read rows, cols, vals
-  MMMatrix *matrix = new MMMatrix(n, m, nz);
+  MMMatrix *matrix = new MMMatrix(N, M, NZ);
   int row; int col; double val;
   
   string line;
-  for (int i = 0; i < nz; ++i) {
-    getline(mmFile, line);
-    stringstream linestream(line, ios_base::in);
-    linestream >> row >> col;
-    // Pattern (i.e. connectivity) matrices do not contain val entry.
-    // Such matrices are filled in with 1.0
-    linestream >> val;
-    if (linestream.fail())
+  for (int i = 0; i < NZ; ++i) {
+    if (mm_is_pattern(matcode)) {
+      // Pattern (i.e. connectivity) matrices do not contain val entry.
+      // Such matrices are filled in with 1.0
+      fscanf(f, "%d %d\n", &row, &col);
       val = 1.0;
+    } else {
+      fscanf(f, "%d %d %lg\n", &row, &col, &val);
+    }
     // adjust to zero index
     matrix->add(row-1, col-1, val);
   }
-  mmFile.close();
+  if (f !=stdin) {
+    fclose(f);
+  }
   return matrix;
 }
 
