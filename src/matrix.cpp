@@ -148,6 +148,32 @@ CSCMatrix* MMMatrix::toCSC() {
   return new CSCMatrix(rows, cols, vals, N, M, sz);
 }
 
+MMMatrix* MMMatrix::getLD() {
+  MMMatrix *matrix = new MMMatrix(N, M, NZ);
+  unsigned int count = 0;
+  for (auto &elt : elements) {
+    if (elt.rowIndex >= elt.colIndex) {
+      matrix->add(elt.rowIndex, elt.colIndex, elt.value);
+      count++;
+    }
+  }
+  matrix->NZ = count;
+  return matrix;
+}
+
+MMMatrix* MMMatrix::getUD() {
+  MMMatrix *matrix = new MMMatrix(N, M, NZ);
+  unsigned int count = 0;
+  for (auto &elt : elements) {
+    if (elt.rowIndex <= elt.colIndex) {
+      matrix->add(elt.rowIndex, elt.colIndex, elt.value);
+      count++;
+    }
+  }
+  matrix->NZ = count;
+  return matrix;
+}
+
 // Caller of this method is responsible for destructing the
 // returned matrix.
 MMMatrix* MMMatrix::fromFile(string fileName) {

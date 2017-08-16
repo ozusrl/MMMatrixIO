@@ -59,6 +59,12 @@ namespace thundercat {
 
     CSCMatrix* toCSC();
 
+    // Return a new matrix that contains the lower triangular part plus the diagonal
+    MMMatrix* getLD();
+    
+    // Return a new matrix that contains the upper triangular part plus the diagonal
+    MMMatrix* getUD();
+
     static MMMatrix* fromFile(std::string fileName);
   };
 

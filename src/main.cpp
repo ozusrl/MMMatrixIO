@@ -16,6 +16,12 @@ int main(int argc, const char *argv[]) {
   cout << "############### MM  ##############\n";
   MMMatrix *mmMatrix = MMMatrix::fromFile(matrixName);
   mmMatrix->print();
+  cout << "############### LD  ##############\n";
+  MMMatrix *ldMatrix = mmMatrix->getLD();
+  ldMatrix->print();
+  cout << "############### UD  ##############\n";
+  MMMatrix *udMatrix = mmMatrix->getUD();
+  udMatrix->print();
   cout << "############### COO ##############\n";
   COOMatrix *cooMatrix = mmMatrix->toCOO();
   cooMatrix->print();
