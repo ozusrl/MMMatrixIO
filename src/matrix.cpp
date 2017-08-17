@@ -18,6 +18,10 @@ Matrix::~Matrix() {
   // do nothing
 }
 
+bool Matrix::isSquare() {
+  return N == M;
+}
+
 ///======================
 /// MMElement
 ///======================
@@ -69,6 +73,30 @@ void MMMatrix::printAsMTX() {
     << (elt.colIndex + 1) << " "
     << elt.value << "\n";
   }
+}
+
+bool MMMatrix::hasFullDiagonal() {
+  if (N != M)
+    return false;
+  
+  double *diagVals = new double[N];
+  for (int i = 0; i < N; i++)
+    diagVals[i] = 0.0;
+  
+  for (auto &elt : elements) {
+    if (elt.rowIndex == elt.colIndex) {
+      diagVals[elt.rowIndex] = elt.value;
+    }
+  }
+
+  for (int i = 0; i < N; i++) {
+    if (diagVals[i] == 0.0) {
+      return false;
+    }
+  }
+  
+  delete[] diagVals;
+  return true;
 }
 
 COOMatrix* MMMatrix::toCOO() {

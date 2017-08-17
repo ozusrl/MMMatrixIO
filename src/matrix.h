@@ -19,6 +19,8 @@ namespace thundercat {
     virtual ~Matrix();
 
     virtual void print() = 0;
+    
+    bool isSquare();
   };
 
   class COOMatrix;
@@ -52,6 +54,8 @@ namespace thundercat {
     void print();
     
     void printAsMTX();
+    
+    bool hasFullDiagonal();
     
     COOMatrix* toCOO();
 
