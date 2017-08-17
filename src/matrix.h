@@ -38,7 +38,7 @@ namespace thundercat {
     static bool compareColumnMajor(const MMElement &elt1, const MMElement &elt2);
   };
   
-  class MMMatrix : Matrix {
+  class MMMatrix : public Matrix {
   private:
     std::vector<MMElement> elements;
     
@@ -69,7 +69,7 @@ namespace thundercat {
   };
 
   //===============================================
-  class COOMatrix : Matrix {
+  class COOMatrix : public Matrix {
   public:
     int* __restrict rowIndices;
     int* __restrict colIndices;
@@ -84,7 +84,7 @@ namespace thundercat {
   };
   
   //===============================================
-  class CSRMatrix : Matrix {
+  class CSRMatrix : public Matrix {
   public:
     int* __restrict rowPtr;
     int* __restrict colIndices;
@@ -99,7 +99,7 @@ namespace thundercat {
   };
 
   //===============================================
-  class CSCMatrix : Matrix {
+  class CSCMatrix : public Matrix {
   public:
     int* __restrict rowIndices;
     int* __restrict colPtr;
