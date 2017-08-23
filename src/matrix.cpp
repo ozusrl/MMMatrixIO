@@ -249,6 +249,10 @@ MMMatrix* MMMatrix::fromFile(string fileName) {
     }
     // adjust to zero index
     matrix->add(row-1, col-1, val);
+    if (mm_is_symmetric(matcode) && row != col) {
+      matrix->add(col-1, row-1, val);
+      matrix->NZ++;
+    }
   }
   if (f !=stdin) {
     fclose(f);
