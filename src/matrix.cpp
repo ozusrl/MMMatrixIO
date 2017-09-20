@@ -47,6 +47,7 @@ bool MMElement::compareColumnMajor(const MMElement &elt1, const MMElement &elt2)
 ///======================
 MMMatrix::MMMatrix(unsigned int N, unsigned int M, unsigned int NZ):
 Matrix(N, M, NZ) {
+  symmetric = false;
 }
 
 MMMatrix::~MMMatrix() {
@@ -97,6 +98,14 @@ bool MMMatrix::hasFullDiagonal() {
   
   delete[] diagVals;
   return true;
+}
+
+bool MMMatrix::isSymmetric() {
+  return symmetric;
+}
+
+void MMMatrix::setSymmetric(bool s) {
+  symmetric = s;
 }
 
 COOMatrix* MMMatrix::toCOO() {
@@ -235,6 +244,7 @@ MMMatrix* MMMatrix::fromFile(string fileName) {
 
   // Read rows, cols, vals
   MMMatrix *matrix = new MMMatrix(N, M, NZ);
+  matrix->setSymmetric(mm_is_symmetric(matcode));
   int row; int col; double val;
   
   string line;

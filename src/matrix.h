@@ -43,6 +43,7 @@ namespace thundercat {
   class MMMatrix : public Matrix {
   private:
     std::vector<MMElement> elements;
+    bool symmetric;
     
   public:
     MMMatrix(unsigned int N, unsigned int M, unsigned int NZ);
@@ -57,6 +58,10 @@ namespace thundercat {
     
     bool hasFullDiagonal();
     
+    bool isSymmetric();
+    
+    void setSymmetric(bool s);
+
     COOMatrix* toCOO();
 
     CSRMatrix* toCSR();

@@ -17,19 +17,20 @@ int main(int argc, const char *argv[]) {
   string matrixName(argv[1]);
   MMMatrix *mmMatrix = MMMatrix::fromFile(matrixName);
   CSRMatrix *csrMatrix = mmMatrix->toCSR();
-  delete mmMatrix;
 
   // General info
   int N = csrMatrix->N;
   int M = csrMatrix->M;
   int NZ = csrMatrix->NZ;
   double meanRowLength = NZ / (double)N;
-  printf("%d %d %d %.5f ", N, M, NZ, meanRowLength);
+  bool symmetric = mmMatrix->isSymmetric();
+  printf("%d %d %d %s %.5f ", N, M, NZ, symmetric ? "sym" : "unsym", meanRowLength);
 
   // Row length info
   int maxRowLength = 0;
   double disparity = 0;
   double sum = 0;
+  double skewness = 0;
   for (int i = 0; i < N; i++) {
     int length = csrMatrix->rowPtr[i+1] - csrMatrix->rowPtr[i];
     if (length > maxRowLength) {
@@ -37,6 +38,7 @@ int main(int argc, const char *argv[]) {
     }
     double diff = length - meanRowLength;
     sum += diff * diff;
+    skewness += (diff * diff * diff);
     double sumDistances = 0;
     if (length != 0){
       for (int j = csrMatrix->rowPtr[i]; j < csrMatrix->rowPtr[i+1] - 1; j++) {
@@ -47,7 +49,10 @@ int main(int argc, const char *argv[]) {
   }
   double variance = sum / N;
   double stdDev = sqrt(variance);
-  printf("%d %.5f %.5f ", maxRowLength, disparity/N, stdDev);
+  disparity = disparity / N;
+  double variation = stdDev / meanRowLength;
+  skewness = (skewness / N) / pow(stdDev, 3.0);
+  printf("%d %.5f %.5f %.5f %.5f", maxRowLength, stdDev, variation, skewness, disparity);
 
   printf("\n");
   return 0;
