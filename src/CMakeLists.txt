@@ -26,4 +26,5 @@ set(HEADER_FILES
 add_library(mmmatrixio ${SOURCE_FILES} ${HEADER_FILES})
 
 add_executable(testmatrixio ${SOURCE_FILES} main.cpp ${HEADER_FILES})
+add_executable(collectMatrixStats ${SOURCE_FILES} statsCollector.cpp ${HEADER_FILES})
 
