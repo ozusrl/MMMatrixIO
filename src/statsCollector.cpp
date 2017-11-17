@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdio.h>
 #include "matrix.h"
+#include "mmmatrix.h"
 #include <math.h>
 
 using namespace thundercat;

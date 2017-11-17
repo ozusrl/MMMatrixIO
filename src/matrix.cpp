@@ -1,6 +1,12 @@
 #include "matrix.h"
+#include "mmmatrix.h"
 #include <iostream>
 #include <algorithm>
+#include <cstdlib> // defines NULL
+#include <vector>
+#include <map>
+#include <set>
+#include <utility>
 
 #include "mmio.h"
 
