@@ -22,9 +22,9 @@ namespace thundercat {
   public:
 
     template <typename ValueType>
-    static void print(MMMatrix<ValueType> &mmMatrix) {
-      std::cout << mmMatrix.N << " " << mmMatrix.M << " " << mmMatrix.numElements() << "\n";
-      for (auto &elt : mmMatrix.getElements()) {
+    static void print(std::unique_ptr<MMMatrix<ValueType>> const &mmMatrix) {
+      std::cout << mmMatrix->N << " " << mmMatrix->M << " " << mmMatrix->numElements() << "\n";
+      for (auto &elt : mmMatrix->getElements()) {
         std::cout << elt.rowIndex << " "
         << elt.colIndex << " "
         << elt.value << "\n";
@@ -32,9 +32,9 @@ namespace thundercat {
     }
     
     template <typename ValueType>
-    static void printAsMTX(MMMatrix<ValueType> &mmMatrix) {
-      std::cout << mmMatrix.N << " " << mmMatrix.M << " " << mmMatrix.numElements() << "\n";
-      for (auto &elt : mmMatrix.getElements()) {
+    static void printAsMTX(std::unique_ptr<MMMatrix<ValueType>> const &mmMatrix) {
+      std::cout << mmMatrix->N << " " << mmMatrix->M << " " << mmMatrix->numElements() << "\n";
+      for (auto &elt : mmMatrix->getElements()) {
         std::cout << (elt.rowIndex + 1) << " "
         << (elt.colIndex + 1) << " "
         << elt.value << "\n";
@@ -42,73 +42,73 @@ namespace thundercat {
     }
     
     template <typename ValueType>
-    static void print(COOMatrix<ValueType> &cooMatrix) {
-      std::cout << "int rowIndices[" << cooMatrix.NZ << "] = {\n";
-      for(int i = 0; i < cooMatrix.NZ; ++i) {
-        std::cout << cooMatrix.rowIndices[i] << ",\n";
+    static void print(std::unique_ptr<COOMatrix<ValueType>> const &cooMatrix) {
+      std::cout << "int rowIndices[" << cooMatrix->NZ << "] = {\n";
+      for(int i = 0; i < cooMatrix->NZ; ++i) {
+        std::cout << cooMatrix->rowIndices[i] << ",\n";
       }
       std::cout << "};\n";
       
-      std::cout << "int colIndices[" << cooMatrix.NZ << "] = {\n";
-      for(int i = 0; i < cooMatrix.NZ; ++i) {
-        std::cout << cooMatrix.colIndices[i] << ",\n";
+      std::cout << "int colIndices[" << cooMatrix->NZ << "] = {\n";
+      for(int i = 0; i < cooMatrix->NZ; ++i) {
+        std::cout << cooMatrix->colIndices[i] << ",\n";
       }
       std::cout << "};\n";
       
-      std::cout << TypeName<ValueType>::name << " values[" << cooMatrix.NZ << "] = {\n";
-      for(int i = 0; i < cooMatrix.NZ; ++i) {
-        if(cooMatrix.values[i] == 0)
+      std::cout << TypeName<ValueType>::name << " values[" << cooMatrix->NZ << "] = {\n";
+      for(int i = 0; i < cooMatrix->NZ; ++i) {
+        if(cooMatrix->values[i] == 0)
           std::cout << "0.0,\n";
         else
-          std::cout << cooMatrix.values[i] << ",\n";
+          std::cout << cooMatrix->values[i] << ",\n";
       }
       std::cout << "};\n";
     }
 
     template <typename ValueType>
-    static void print(CSRMatrix<ValueType> &csrMatrix) {
-      std::cout << "int rowPtr[" << (csrMatrix.N + 1) << "] = {\n";
-      for(int i = 0; i < csrMatrix.N + 1; ++i) {
-        std::cout << csrMatrix.rowPtr[i] << ",\n";
+    static void print(std::unique_ptr<CSRMatrix<ValueType>> const &csrMatrix) {
+      std::cout << "int rowPtr[" << (csrMatrix->N + 1) << "] = {\n";
+      for(int i = 0; i < csrMatrix->N + 1; ++i) {
+        std::cout << csrMatrix->rowPtr[i] << ",\n";
       }
       std::cout << "};\n";
       
-      std::cout << "int colIndices[" << csrMatrix.NZ << "] = {\n";
-      for(int i = 0; i < csrMatrix.NZ; ++i) {
-        std::cout << csrMatrix.colIndices[i] << ",\n";
+      std::cout << "int colIndices[" << csrMatrix->NZ << "] = {\n";
+      for(int i = 0; i < csrMatrix->NZ; ++i) {
+        std::cout << csrMatrix->colIndices[i] << ",\n";
       }
       std::cout << "};\n";
       
-      std::cout << TypeName<ValueType>::name << " values[" << csrMatrix.NZ << "] = {\n";
-      for(int i = 0; i < csrMatrix.NZ; ++i) {
-        if(csrMatrix.values[i] == 0)
+      std::cout << TypeName<ValueType>::name << " values[" << csrMatrix->NZ << "] = {\n";
+      for(int i = 0; i < csrMatrix->NZ; ++i) {
+        if(csrMatrix->values[i] == 0)
           std::cout << "0.0,\n";
         else
-          std::cout << csrMatrix.values[i] << ",\n";
+          std::cout << csrMatrix->values[i] << ",\n";
       }
       std::cout << "};\n";
     }
 
     template <typename ValueType>
-    static void print(CSCMatrix<ValueType> &cscMatrix) {
-      std::cout << "int rowIndices[" << cscMatrix.NZ << "] = {\n";
-      for(int i = 0; i < cscMatrix.NZ; ++i) {
-        std::cout << cscMatrix.rowIndices[i] << ",\n";
+    static void print(std::unique_ptr<CSCMatrix<ValueType>> const &cscMatrix) {
+      std::cout << "int rowIndices[" << cscMatrix->NZ << "] = {\n";
+      for(int i = 0; i < cscMatrix->NZ; ++i) {
+        std::cout << cscMatrix->rowIndices[i] << ",\n";
       }
       std::cout << "};\n";
       
-      std::cout << "int colPtr[" << (cscMatrix.M + 1) << "] = {\n";
-      for(int i = 0; i < cscMatrix.M + 1; ++i) {
-        std::cout << cscMatrix.colPtr[i] << ",\n";
+      std::cout << "int colPtr[" << (cscMatrix->M + 1) << "] = {\n";
+      for(int i = 0; i < cscMatrix->M + 1; ++i) {
+        std::cout << cscMatrix->colPtr[i] << ",\n";
       }
       std::cout << "};\n";
       
-      std::cout << TypeName<ValueType>::name << " values[" << cscMatrix.NZ << "] = {\n";
-      for(int i = 0; i < cscMatrix.NZ; ++i) {
-        if(cscMatrix.values[i] == 0)
+      std::cout << TypeName<ValueType>::name << " values[" << cscMatrix->NZ << "] = {\n";
+      for(int i = 0; i < cscMatrix->NZ; ++i) {
+        if(cscMatrix->values[i] == 0)
           std::cout << "0.0,\n";
         else
-          std::cout << cscMatrix.values[i] << ",\n";
+          std::cout << cscMatrix->values[i] << ",\n";
       }
       std::cout << "};\n";
     }

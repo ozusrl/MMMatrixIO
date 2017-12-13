@@ -84,7 +84,7 @@ public:
     return symmetric;
   }
 
-  COOMatrix<ValueType>* toCOO() {
+  std::unique_ptr<COOMatrix<ValueType>> toCOO() {
     std::sort(elements.begin(), elements.end(), MMElement<ValueType>::compareRowMajor);
     
     long sz = elements.size();
@@ -100,10 +100,10 @@ public:
       eltIndex++;
     }
     
-    return new COOMatrix<ValueType>(rows, cols, vals, N, M, sz);
+    return std::make_unique<COOMatrix<ValueType>>(rows, cols, vals, N, M, sz);
   }
 
-  CSRMatrix<ValueType>* toCSR() {
+  std::unique_ptr<CSRMatrix<ValueType>> toCSR() {
     std::sort(elements.begin(), elements.end(), MMElement<ValueType>::compareRowMajor);
     
     long sz = elements.size();
@@ -129,10 +129,10 @@ public:
     }
     rows[N] = eltIndex;
     
-    return new CSRMatrix<ValueType>(rows, cols, vals, N, M, sz);
+    return std::make_unique<CSRMatrix<ValueType>>(rows, cols, vals, N, M, sz);
   }
 
-  CSCMatrix<ValueType>* toCSC() {
+  std::unique_ptr<CSCMatrix<ValueType>> toCSC() {
     std::sort(elements.begin(), elements.end(), MMElement<ValueType>::compareColumnMajor);
     
     long sz = elements.size();
@@ -158,12 +158,12 @@ public:
     }
     cols[M] = eltIndex;
     
-    return new CSCMatrix<ValueType>(rows, cols, vals, N, M, sz);
+    return std::make_unique<CSCMatrix<ValueType>>(rows, cols, vals, N, M, sz);
   }
 
   // Return a new matrix that contains the lower triangular part plus the diagonal
-  MMMatrix<ValueType>* getLD() {
-    MMMatrix<ValueType> *matrix = new MMMatrix<ValueType>(N, M);
+  std::unique_ptr<MMMatrix<ValueType>> getLD() {
+    auto matrix = std::make_unique<MMMatrix<ValueType>>(N, M);
     unsigned int count = 0;
     for (auto &elt : elements) {
       if (elt.rowIndex >= elt.colIndex) {
@@ -175,8 +175,8 @@ public:
   }
 
   // Return a new matrix that contains the upper triangular part plus the diagonal
-  MMMatrix<ValueType>* getUD() {
-    MMMatrix<ValueType> *matrix = new MMMatrix<ValueType>(N, M);
+  std::unique_ptr<MMMatrix<ValueType>> getUD() {
+    auto matrix = std::make_unique<MMMatrix<ValueType>>(N, M);
     unsigned int count = 0;
     for (auto &elt : elements) {
       if (elt.rowIndex <= elt.colIndex) {
@@ -187,7 +187,7 @@ public:
     return matrix;
   }
 
-  static MMMatrix<ValueType>* fromFile(std::string fileName) {
+  static std::unique_ptr<MMMatrix<ValueType>> fromFile(std::string fileName) {
     FILE *f;
     if ((f = fopen(fileName.c_str(), "r")) == NULL) {
       std::cerr << "Problem opening file " << fileName << ".\n";
@@ -217,7 +217,7 @@ public:
     }
     
     // Read rows, cols, vals
-    MMMatrix<ValueType> *matrix = new MMMatrix<ValueType>(N, M, mm_is_symmetric(matcode));
+    auto matrix = std::make_unique<MMMatrix<ValueType>>(N, M, mm_is_symmetric(matcode));
     int row; int col; double val;
     
     std::string line;

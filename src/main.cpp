@@ -16,22 +16,22 @@ int main(int argc, const char *argv[]) {
   }
   string matrixName(argv[1]);
   cout << "############### MM  ##############\n";
-  MMMatrix<double> *mmMatrix = MMMatrix<double>::fromFile(matrixName);
-  MatrixPrinter::print(*mmMatrix);
+  std::unique_ptr<MMMatrix<double>> mmMatrix = MMMatrix<double>::fromFile(matrixName);
+  MatrixPrinter::print(mmMatrix);
   cout << "############### LD  ##############\n";
-  MMMatrix<double> *ldMatrix = mmMatrix->getLD();
-  MatrixPrinter::print(*ldMatrix);
+  std::unique_ptr<MMMatrix<double>> ldMatrix = mmMatrix->getLD();
+  MatrixPrinter::print(ldMatrix);
   cout << "############### UD  ##############\n";
-  MMMatrix<double> *udMatrix = mmMatrix->getUD();
-  MatrixPrinter::print(*udMatrix);
+  std::unique_ptr<MMMatrix<double>> udMatrix = mmMatrix->getUD();
+  MatrixPrinter::print(udMatrix);
   cout << "############### COO ##############\n";
-  COOMatrix<double> *cooMatrix = mmMatrix->toCOO();
-  MatrixPrinter::print(*cooMatrix);
+  std::unique_ptr<COOMatrix<double>> cooMatrix = mmMatrix->toCOO();
+  MatrixPrinter::print(cooMatrix);
   cout << "############### CSR ##############\n";
-  CSRMatrix<double> *csrMatrix = mmMatrix->toCSR();
-  MatrixPrinter::print(*csrMatrix);
+  std::unique_ptr<CSRMatrix<double>> csrMatrix = mmMatrix->toCSR();
+  MatrixPrinter::print(csrMatrix);
   cout << "############### CSC ##############\n";
-  CSCMatrix<double> *cscMatrix = mmMatrix->toCSC();
-  MatrixPrinter::print(*cscMatrix);
+  std::unique_ptr<CSCMatrix<double>> cscMatrix = mmMatrix->toCSC();
+  MatrixPrinter::print(cscMatrix);
 }
 

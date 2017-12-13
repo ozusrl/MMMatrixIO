@@ -16,8 +16,8 @@ int main(int argc, const char *argv[]) {
     exit(1);
   }
   string matrixName(argv[1]);
-  MMMatrix<double> *mmMatrix = MMMatrix<double>::fromFile(matrixName);
-  CSRMatrix<double> *csrMatrix = mmMatrix->toCSR();
+  std::unique_ptr<MMMatrix<double>> mmMatrix = MMMatrix<double>::fromFile(matrixName);
+  std::unique_ptr<CSRMatrix<double>> csrMatrix = mmMatrix->toCSR();
 
   // General info
   int N = csrMatrix->N;
