@@ -84,6 +84,10 @@ public:
     return symmetric;
   }
 
+  bool isSquare() {
+    return N == M;
+  }
+  
   std::unique_ptr<COOMatrix<ValueType>> toCOO() {
     std::sort(elements.begin(), elements.end(), MMElement<ValueType>::compareRowMajor);
     
