@@ -12,8 +12,10 @@ class MMElement {
 public:
   int rowIndex; int colIndex; ValueType value;
 
-  MMElement(int row, int col, ValueType val):
-  rowIndex(row), colIndex(col), value(val) {
+  MMElement(int row, int col, ValueType val) {
+    this->rowIndex = row;
+    this->colIndex = col;
+    this->value = val;
   }
 
   static bool compareRowMajor(const MMElement &elt1, const MMElement &elt2) {
@@ -30,23 +32,28 @@ public:
 };
 
 template<typename ValueType>
-class MMMatrix : public Matrix {
+class MMMatrix {
+public:
+  const unsigned int N;
+  const unsigned int M;
 private:
   std::vector< MMElement<ValueType> > elements;
   bool symmetric;
 
 public:
-  MMMatrix(unsigned int N, unsigned int M, unsigned int NZ):
-  Matrix(N, M, NZ) {
-    symmetric = false;
+  MMMatrix(unsigned int N, unsigned int M):
+  N(N), M(M) {
+    this->symmetric = false;
   }
 
-  virtual ~MMMatrix() {
-    // do nothing
-  }
+  virtual ~MMMatrix() = default;
 
   std::vector< MMElement<ValueType> > * getElements() {
     return &elements;
+  }
+  
+  unsigned int numElements() {
+    return elements.size();
   }
   
   void add(int row, int col, ValueType val) {
@@ -157,7 +164,7 @@ public:
 
   // Return a new matrix that contains the lower triangular part plus the diagonal
   MMMatrix<ValueType>* getLD() {
-    MMMatrix<ValueType> *matrix = new MMMatrix<ValueType>(N, M, NZ);
+    MMMatrix<ValueType> *matrix = new MMMatrix<ValueType>(N, M);
     unsigned int count = 0;
     for (auto &elt : elements) {
       if (elt.rowIndex >= elt.colIndex) {
@@ -165,13 +172,12 @@ public:
         count++;
       }
     }
-    matrix->NZ = count;
     return matrix;
   }
 
   // Return a new matrix that contains the upper triangular part plus the diagonal
   MMMatrix<ValueType>* getUD() {
-    MMMatrix<ValueType> *matrix = new MMMatrix<ValueType>(N, M, NZ);
+    MMMatrix<ValueType> *matrix = new MMMatrix<ValueType>(N, M);
     unsigned int count = 0;
     for (auto &elt : elements) {
       if (elt.rowIndex <= elt.colIndex) {
@@ -179,7 +185,6 @@ public:
         count++;
       }
     }
-    matrix->NZ = count;
     return matrix;
   }
 
@@ -213,7 +218,7 @@ public:
     }
     
     // Read rows, cols, vals
-    MMMatrix<ValueType> *matrix = new MMMatrix<ValueType>(N, M, NZ);
+    MMMatrix<ValueType> *matrix = new MMMatrix<ValueType>(N, M);
     matrix->setSymmetric(mm_is_symmetric(matcode));
     int row; int col; double val;
     
@@ -231,7 +236,6 @@ public:
       matrix->add(row-1, col-1, (ValueType)val);
       if (mm_is_symmetric(matcode) && row != col) {
         matrix->add(col-1, row-1, (ValueType)val);
-        matrix->NZ++;
       }
     }
     if (f !=stdin) {

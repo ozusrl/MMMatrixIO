@@ -3,9 +3,9 @@
 namespace thundercat {
   class Matrix {
   public:
-    unsigned int N; // num rows
-    unsigned int M; // num columns
-    unsigned int NZ;
+    const unsigned int N; // num rows
+    const unsigned int M; // num columns
+    const unsigned int NZ;
     
     Matrix(unsigned int N, unsigned int M, unsigned int NZ):
     N(N), M(M), NZ(NZ) {
@@ -18,7 +18,7 @@ namespace thundercat {
     }
   };
   
-  Matrix::~Matrix() { }
+  Matrix::~Matrix() = default;
 
   //===============================================
   template<typename ValueType>
