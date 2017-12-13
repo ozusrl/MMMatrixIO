@@ -14,7 +14,6 @@ set(dir ${CMAKE_CURRENT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${dir}")
 
 set(SOURCE_FILES
-                 matrix.cpp
                  mmio.cpp
 )
 

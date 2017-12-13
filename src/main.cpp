@@ -15,22 +15,22 @@ int main(int argc, const char *argv[]) {
   }
   string matrixName(argv[1]);
   cout << "############### MM  ##############\n";
-  MMMatrix *mmMatrix = MMMatrix::fromFile(matrixName);
+  MMMatrix<double> *mmMatrix = MMMatrix<double>::fromFile(matrixName);
   mmMatrix->print();
   cout << "############### LD  ##############\n";
-  MMMatrix *ldMatrix = mmMatrix->getLD();
+  MMMatrix<double> *ldMatrix = mmMatrix->getLD();
   ldMatrix->print();
   cout << "############### UD  ##############\n";
-  MMMatrix *udMatrix = mmMatrix->getUD();
+  MMMatrix<double> *udMatrix = mmMatrix->getUD();
   udMatrix->print();
   cout << "############### COO ##############\n";
-  COOMatrix *cooMatrix = mmMatrix->toCOO();
+  COOMatrix<double> *cooMatrix = mmMatrix->toCOO();
   cooMatrix->print();
   cout << "############### CSR ##############\n";
-  CSRMatrix *csrMatrix = mmMatrix->toCSR();
+  CSRMatrix<double> *csrMatrix = mmMatrix->toCSR();
   csrMatrix->print();
   cout << "############### CSC ##############\n";
-  CSCMatrix *cscMatrix = mmMatrix->toCSC();
+  CSCMatrix<double> *cscMatrix = mmMatrix->toCSC();
   cscMatrix->print();
 }
 
