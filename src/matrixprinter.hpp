@@ -24,7 +24,7 @@ namespace thundercat {
     template <typename ValueType>
     static void print(MMMatrix<ValueType> &mmMatrix) {
       std::cout << mmMatrix.N << " " << mmMatrix.M << " " << mmMatrix.numElements() << "\n";
-      for (MMElement<ValueType> &elt : *(mmMatrix.getElements())) {
+      for (auto &elt : mmMatrix.getElements()) {
         std::cout << elt.rowIndex << " "
         << elt.colIndex << " "
         << elt.value << "\n";
@@ -34,7 +34,7 @@ namespace thundercat {
     template <typename ValueType>
     static void printAsMTX(MMMatrix<ValueType> &mmMatrix) {
       std::cout << mmMatrix.N << " " << mmMatrix.M << " " << mmMatrix.numElements() << "\n";
-      for (MMElement<ValueType> &elt : *(mmMatrix.getElements())) {
+      for (auto &elt : mmMatrix.getElements()) {
         std::cout << (elt.rowIndex + 1) << " "
         << (elt.colIndex + 1) << " "
         << elt.value << "\n";

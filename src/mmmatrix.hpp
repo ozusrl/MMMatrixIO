@@ -8,23 +8,23 @@
 
 namespace thundercat{
 template<typename ValueType>
-class MMElement {
-public:
-  int rowIndex; int colIndex; ValueType value;
+struct MMElement {
+  // Unfortunately, can't make the members const, because sort() does not like this.
+  // The workaround is uglier than having non-const members.
+  int rowIndex;
+  int colIndex;
+  ValueType value;
 
-  MMElement(int row, int col, ValueType val) {
-    this->rowIndex = row;
-    this->colIndex = col;
-    this->value = val;
-  }
-
-  static bool compareRowMajor(const MMElement &elt1, const MMElement &elt2) {
+  MMElement(const int row, const int col, const ValueType val):
+  rowIndex(row), colIndex(col), value(val) { }
+    
+  static bool compareRowMajor(const MMElement<ValueType> &elt1, const MMElement<ValueType> &elt2) {
     if (elt1.rowIndex < elt2.rowIndex) return true;
     else if (elt2.rowIndex < elt1.rowIndex) return false;
     else return elt1.colIndex < elt2.colIndex;
   }
 
-  static bool compareColumnMajor(const MMElement &elt1, const MMElement &elt2) {
+  static bool compareColumnMajor(const MMElement<ValueType> &elt1, const MMElement<ValueType> &elt2) {
     if (elt1.colIndex < elt2.colIndex) return true;
     else if (elt2.colIndex < elt1.colIndex) return false;
     else return elt1.rowIndex < elt2.rowIndex;
@@ -38,18 +38,21 @@ public:
   const unsigned int M;
 private:
   std::vector< MMElement<ValueType> > elements;
-  bool symmetric;
+  const bool symmetric;
 
 public:
   MMMatrix(unsigned int N, unsigned int M):
-  N(N), M(M) {
-    this->symmetric = false;
+  N(N), M(M), symmetric(false) {
+  }
+  
+  MMMatrix(unsigned int N, unsigned int M, bool symmetric):
+  N(N), M(M), symmetric(symmetric) {
   }
 
   virtual ~MMMatrix() = default;
 
-  std::vector< MMElement<ValueType> > * getElements() {
-    return &elements;
+  const std::vector< MMElement<ValueType> > getElements() {
+    return elements;
   }
   
   unsigned int numElements() {
@@ -79,10 +82,6 @@ public:
 
   bool isSymmetric() {
     return symmetric;
-  }
-
-  void setSymmetric(bool s) {
-    symmetric = s;
   }
 
   COOMatrix<ValueType>* toCOO() {
@@ -218,8 +217,7 @@ public:
     }
     
     // Read rows, cols, vals
-    MMMatrix<ValueType> *matrix = new MMMatrix<ValueType>(N, M);
-    matrix->setSymmetric(mm_is_symmetric(matcode));
+    MMMatrix<ValueType> *matrix = new MMMatrix<ValueType>(N, M, mm_is_symmetric(matcode));
     int row; int col; double val;
     
     std::string line;
