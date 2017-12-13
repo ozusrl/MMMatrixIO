@@ -1,6 +1,7 @@
 #include <iostream>
-#include "matrix.h"
-#include "mmmatrix.h"
+#include "matrix.hpp"
+#include "mmmatrix.hpp"
+#include "matrixprinter.hpp"
 
 using namespace thundercat;
 using namespace std;
@@ -16,21 +17,21 @@ int main(int argc, const char *argv[]) {
   string matrixName(argv[1]);
   cout << "############### MM  ##############\n";
   MMMatrix<double> *mmMatrix = MMMatrix<double>::fromFile(matrixName);
-  mmMatrix->print();
+  MatrixPrinter::print(*mmMatrix);
   cout << "############### LD  ##############\n";
   MMMatrix<double> *ldMatrix = mmMatrix->getLD();
-  ldMatrix->print();
+  MatrixPrinter::print(*ldMatrix);
   cout << "############### UD  ##############\n";
   MMMatrix<double> *udMatrix = mmMatrix->getUD();
-  udMatrix->print();
+  MatrixPrinter::print(*udMatrix);
   cout << "############### COO ##############\n";
   COOMatrix<double> *cooMatrix = mmMatrix->toCOO();
-  cooMatrix->print();
+  MatrixPrinter::print(*cooMatrix);
   cout << "############### CSR ##############\n";
   CSRMatrix<double> *csrMatrix = mmMatrix->toCSR();
-  csrMatrix->print();
+  MatrixPrinter::print(*csrMatrix);
   cout << "############### CSC ##############\n";
   CSCMatrix<double> *cscMatrix = mmMatrix->toCSC();
-  cscMatrix->print();
+  MatrixPrinter::print(*cscMatrix);
 }
 

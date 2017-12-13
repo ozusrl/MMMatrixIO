@@ -18,8 +18,9 @@ set(SOURCE_FILES
 )
 
 set(HEADER_FILES
-                 matrix.h
-                 mmmatrix.h
+                 matrix.hpp
+                 matrixprinter.hpp
+                 mmmatrix.hpp
                  mmio.h
 )
 

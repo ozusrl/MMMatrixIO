@@ -1,6 +1,6 @@
 #pragma once
 
-#include "matrix.h"
+#include "matrix.hpp"
 #include "mmio.h"
 #include <vector>
 #include <string>
@@ -9,12 +9,11 @@
 namespace thundercat{
 template<typename ValueType>
 class MMElement {
- public:
+public:
   int rowIndex; int colIndex; ValueType value;
 
   MMElement(int row, int col, ValueType val):
   rowIndex(row), colIndex(col), value(val) {
-    
   }
 
   static bool compareRowMajor(const MMElement &elt1, const MMElement &elt2) {
@@ -32,11 +31,11 @@ class MMElement {
 
 template<typename ValueType>
 class MMMatrix : public Matrix {
- private:
+private:
   std::vector< MMElement<ValueType> > elements;
   bool symmetric;
 
- public:
+public:
   MMMatrix(unsigned int N, unsigned int M, unsigned int NZ):
   Matrix(N, M, NZ) {
     symmetric = false;
@@ -46,50 +45,29 @@ class MMMatrix : public Matrix {
     // do nothing
   }
 
+  std::vector< MMElement<ValueType> > * getElements() {
+    return &elements;
+  }
+  
   void add(int row, int col, ValueType val) {
     elements.push_back(MMElement<ValueType>(row, col, val));
-  }
-
-  void print() {
-    std::cout << N << " " << M << " " << elements.size() << "\n";
-    for (MMElement<ValueType> &elt : elements) {
-      std::cout << elt.rowIndex << " "
-      << elt.colIndex << " "
-      << elt.value << "\n";
-    }
-  }
-
-  void printAsMTX() {
-    std::cout << N << " " << M << " " << elements.size() << "\n";
-    for (MMElement<ValueType> &elt : elements) {
-      std::cout << (elt.rowIndex + 1) << " "
-      << (elt.colIndex + 1) << " "
-      << elt.value << "\n";
-    }
   }
 
   bool hasFullDiagonal() {
     if (N != M)
       return false;
-    
-    ValueType *diagVals = new ValueType[N];
-    for (int i = 0; i < N; i++)
-      diagVals[i] = 0.0;
-    
+
+    int diagValueCount = 0;
     for (auto &elt : elements) {
       if (elt.rowIndex == elt.colIndex) {
-        diagVals[elt.rowIndex] = elt.value;
+        if (elt.value == 0.0)
+          return false;
+        else
+          diagValueCount++;
       }
     }
-    
-    for (int i = 0; i < N; i++) {
-      if (diagVals[i] == 0.0) {
-        return false;
-      }
-    }
-    
-    delete[] diagVals;
-    return true;
+
+    return diagValueCount == N;
   }
 
   bool isSymmetric() {
