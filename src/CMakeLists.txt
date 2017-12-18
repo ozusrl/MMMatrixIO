@@ -15,6 +15,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${dir}")
 
 set(SOURCE_FILES
                  mmio.cpp
+                 matrix.cpp
 )
 
 set(HEADER_FILES

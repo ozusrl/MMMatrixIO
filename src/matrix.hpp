@@ -7,18 +7,12 @@ namespace thundercat {
     const unsigned int M; // num columns
     const unsigned int NZ;
     
-    Matrix(unsigned int N, unsigned int M, unsigned int NZ):
-    N(N), M(M), NZ(NZ) {
-    }
+    Matrix(unsigned int N, unsigned int M, unsigned int NZ);
     
     virtual ~Matrix() = 0;
     
-    bool isSquare() {
-      return N == M;
-    }
+    bool isSquare();
   };
-  
-  Matrix::~Matrix() = default;
 
   //===============================================
   template<typename ValueType>
