@@ -2,6 +2,8 @@
 
 #include "matrix.hpp"
 #include "mmio.h"
+#include <memory>
+#include <algorithm>
 #include <vector>
 #include <string>
 #include <iostream>
