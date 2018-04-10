@@ -1,6 +1,17 @@
 #pragma once
 
+#include <vector>
+#include <iostream>
+
 namespace thundercat {
+
+  typedef struct {
+      unsigned int rowIndexBegin;
+      unsigned int rowIndexEnd;
+      unsigned long valIndexBegin;
+      unsigned long valIndexEnd;
+  } MatrixStripeInfo;
+
   class Matrix {
   public:
     const unsigned int N; // num rows
@@ -12,6 +23,10 @@ namespace thundercat {
     virtual ~Matrix() = 0;
     
     bool isSquare();
+
+    virtual std::vector<MatrixStripeInfo> *getStripeInfos(unsigned int numPartitions);
+
+
   };
 
   //===============================================
@@ -52,6 +67,42 @@ namespace thundercat {
       delete[] colIndices;
       delete[] values;
     }
+
+    virtual std::vector<MatrixStripeInfo> *getStripeInfos(unsigned int numPartitions) override {
+        if (stripeInfos.size() != 0) {
+          std::cout << "I was not expecting getStripeInfos to be called multiple times.\n";
+        }
+        // Split the matrix
+        unsigned long chunkSize = this->NZ   / numPartitions;
+        unsigned int rowIndex = 0;
+        unsigned long valIndex = 0;
+        for (int partitionIndex = 0; partitionIndex < numPartitions; ++partitionIndex) {
+          unsigned int rowIndexStart = rowIndex;
+          unsigned long valIndexStart = valIndex;
+          unsigned long numElementsCovered = 0;
+
+          if (partitionIndex == numPartitions - 1) {
+            rowIndex = this->N;
+            valIndex = this->NZ;
+          } else {
+            while(numElementsCovered < chunkSize && rowIndex < this->N) {
+              numElementsCovered += this->rowPtr[rowIndex+1] - this->rowPtr[rowIndex];
+              rowIndex++;
+            }
+            valIndex += numElementsCovered;
+          }
+
+          MatrixStripeInfo stripeInfo;
+          stripeInfo.rowIndexBegin = rowIndexStart;
+          stripeInfo.rowIndexEnd = rowIndex;
+          stripeInfo.valIndexBegin = valIndexStart;
+          stripeInfo.valIndexEnd = valIndex;
+          stripeInfos.push_back(stripeInfo);
+        }
+        return &stripeInfos;
+      }
+  protected:
+      std::vector<MatrixStripeInfo> stripeInfos;
   };
 
   //===============================================

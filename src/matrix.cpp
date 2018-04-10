@@ -1,3 +1,4 @@
+#include <iostream>
 #include "matrix.hpp"
 
 using namespace thundercat;
@@ -10,3 +11,8 @@ bool Matrix::isSquare() {
 }
 
 Matrix::~Matrix() = default;
+
+std::vector<MatrixStripeInfo> *Matrix::getStripeInfos(unsigned int numPartitions) {
+  std::cout << "getStripeInfos is not implemented for this type of matrix." << std::endl;
+  exit(1);
+}
