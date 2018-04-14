@@ -69,8 +69,8 @@ namespace thundercat {
     }
 
     virtual std::vector<MatrixStripeInfo> *getStripeInfos(unsigned int numPartitions) override {
-        if (stripeInfos.size() != 0) {
-          std::cout << "I was not expecting getStripeInfos to be called multiple times.\n";
+        if (stripeInfos.size() == numPartitions) {
+          return &stripeInfos;
         }
         // Split the matrix
         unsigned long chunkSize = this->NZ   / numPartitions;
